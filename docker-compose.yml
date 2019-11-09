@@ -1,0 +1,15 @@
+version: '3'
+services:
+  socket:
+    build: npm start
+    ports:
+      - "8888:8888"
+    environment:
+      - CMD=socket
+      - NODE_ENV=${NODE_ENV}
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "3"

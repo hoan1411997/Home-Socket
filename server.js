@@ -4,7 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8888;
 const INDEX = path.join(__dirname, 'index.html');
 let device = 0;
 let user = 0;
@@ -34,11 +34,14 @@ io.on('connection', (socket) => {
   clients.push(socket.id)
   console.log('Client connected');
   console.log(`Socket ${socket.id} connected!`);
-
+  socket.on('led-change', function(data) {
+    console.log(data);
+    io.emit('led-change', data);
+  });
   socket.on('connection', function (message) {
     console.log(message)
   })
   socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+//setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
