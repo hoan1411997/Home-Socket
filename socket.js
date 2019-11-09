@@ -3,7 +3,7 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const DATABASE = require('./modules/database');
-const PORT = 8888;
+const PORT = 5678;
 
 
 let clients = [];
