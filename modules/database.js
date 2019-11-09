@@ -20,7 +20,6 @@ function creat() {
 		"heroku pg:psql postgresql-symmetrical-00864 --app postgres-db-v"
 	});
 }
-
 const db = creat();
 db.authenticate()
 	.then(() => console.log("CONECTDATA: success"))
