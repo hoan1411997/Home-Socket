@@ -17,13 +17,13 @@ app_.get('/', (req, res, next) => {
     next()
 })
 
-app_.get('/clients', (req, res, next) => {
-    res.send({
-        status: 200,
-        data: clients
-    })
-    next()
-})
+// app_.get('/clients', (req, res, next) => {
+//     res.send({
+//         status: 200,
+//         data: clients
+//     })
+//     next()
+// })
 function ParseJson(jsondata) {
     try {
         return JSON.parse(jsondata)
