@@ -23,7 +23,7 @@
     "pg": "^7.3.0",
     "pg-hstore": "^2.3.2",
     "request": "^2.83.0",
-    "sequelize": "^4.22.2",
+    "sequelize": "^5.15.1",
     "serve-favicon": "~2.4.5",
     "axios": "^0.16.2"
   }
