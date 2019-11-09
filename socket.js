@@ -10,21 +10,6 @@ let clients = [];
 app.use("/assets", express.static(__dirname + "/public"));
 app.set("views", "./views");
 
-// app.get('/', (req, res, next) => {
-//     res.send({
-//         status: 200,
-//         message: "It's ok"
-//     })
-//     next()
-// })
-
-// app.get('/clients', (req, res, next) => {
-//     res.send({
-//         status: 200,
-//         data: clients
-//     })
-//     next()
-// })
 
 app.use(function (req, res, next) {
 
@@ -44,6 +29,22 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+app.get('/', (req, res, next) => {
+    res.send({
+        status: 200,
+        message: "It's ok"
+    })
+    next()
+})
+
+app.get('/clients', (req, res, next) => {
+    res.send({
+        status: 200,
+        data: clients
+    })
+    next()
+})
+
 function ParseJson(jsondata) {
     try {
         return JSON.parse(jsondata)
