@@ -1,29 +1,49 @@
 const express = require('express');
-const app_ = express();
-const server = require('http').Server(app_);
+const app = express();
+const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const DATABASE = require('./modules/database');
 const PORT = 8888;
 
 
 let clients = [];
+app.use("/assets", express.static(__dirname + "/public"));
+app.set("views", "./views");
 
+// app.get('/', (req, res, next) => {
+//     res.send({
+//         status: 200,
+//         message: "It's ok"
+//     })
+//     next()
+// })
 
-app_.get('/', (req, res, next) => {
-    res.send({
-        status: 200,
-        message: "It's ok"
-    })
-    next()
-})
-
-// app_.get('/clients', (req, res, next) => {
+// app.get('/clients', (req, res, next) => {
 //     res.send({
 //         status: 200,
 //         data: clients
 //     })
 //     next()
 // })
+
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
 function ParseJson(jsondata) {
     try {
         return JSON.parse(jsondata)
