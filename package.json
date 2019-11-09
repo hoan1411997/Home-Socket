@@ -1,9 +1,9 @@
 {
-  "name": "smartparking",
-  "version": "0.0.0",
+  "name": "homesocket",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node socket"
+    "start": "node socket.js"
   },
   "dependencies": {
     "axios": "^0.16.2",
