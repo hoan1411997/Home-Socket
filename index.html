@@ -1,14 +1,29 @@
-<html>
-  <body>
-    <p id='server-time'></p>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      var socket = io();
-      var el = document.getElementById('server-time');
+<html lang="en">
 
-      socket.on('time', function(timeString) {
-        el.innerHTML = 'Home-server time: ' + timeString;
-      });
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>Websocket</title>
+</head>
+
+<body>
+ 
+  <button onclick="clearlog()">Clear Logs</button>
+  <div id="display"></div>
+  <script>
+    var sock = new WebSocket("ws://192.168.1.10:8888");  
+    var display = document.getElementById("display")
+
+    sock.onopen = function (event) {
+      setTimeout(function () { sock.send('connection succeeded'); }, 1000);
+      display.innerHTML += "connection succeeded <br />";
+    };
+    sock.onmessage = function (event) {
+      display.innerHTML += event.data + "<br />";
+    }
+    function clearlog() {
+      display.innerHTML = "";
+    }
+  </script>
+</body>
+
 </html>
