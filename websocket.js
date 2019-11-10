@@ -27,6 +27,7 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 app.get('/report', (req, res, next) => {
+
     return res.send({
         status: 200,
         data: {
@@ -40,8 +41,8 @@ app.get('/report', (req, res, next) => {
 })
 
 app.get('/timeMilisLock', function (req, res) {
-    socket.clients.forEach(function (client) { //broadcast incoming message to all clients (s.clients)
-        if (client.readyState) { //except to the same client (ws) that sent this message
+    socket.clients.forEach(function (client) {
+        if (client.readyState) {
             client.send("2000");
         }
     });
@@ -60,14 +61,55 @@ socket.on('connection', function (ws, req) {
         } catch (e) {
             data = null;
         }
+        if (message == "ON" || message == "OFF") {
+            changeStateUser(ws.id, message);
+        }
+        if (message == "CHANGESTATE") {
+            changeState(ws.id);
+        }
+
+        if (data && data.sigin) {
+            ws.id = data.sigin;
+            ws.isUser = true;
+            if (!clients[data.sigin]) {
+                clients[data.sigin] = {};
+                clients[data.sigin].mac = data.mac;
+                if (!mac[data.mac]) mac[data.mac] = {}
+                mac[data.mac].clients = data.sigin;
+            };
+        }
         if (data && data.id) {
             ws.id = data.id;
-            if (!devices[data.id]) devices[data.id] = {}
-            devices[data.id].mac = data.mac;
+            if (data.user) {
+                ws.isUser = true;
+                if (!clients[data.id]) clients[data.id] = {}
+                clients[data.id].mac = data.mac;
 
-            if (!mac[data.mac]) mac[data.mac] = {}
-            mac[data.mac].device = data.id;
+                if (!mac[data.mac]) mac[data.mac] = {}
+                mac[data.mac].clients = data.id;
+            } else {
+                ws.isUser = false;
+                if (!devices[data.id]) {
+                    devices[data.id] = {};
+                    devices[data.id].mac = data.mac;
+                    devices[data.id].pass_0 = "0";
+                    devices[data.id].pass_1 = "0";
+                    devices[data.id].pass_2 = "0";
+                    devices[data.id].pass_3 = "0";
+                    devices[data.id].time = "5";
+
+                }
+
+
+                if (!mac[data.mac]) mac[data.mac] = {}
+                mac[data.mac].device = data.id;
+
+
+            }
+
+
         }
+
     });
     ws.on('close', function () {
         count--;
@@ -76,20 +118,89 @@ socket.on('connection', function (ws, req) {
 });
 server.listen(PORT);
 
-var setPassWord = (id,pass)=>{
+var changeState = (userid) => {
+    //1111   0000
+    var iddevice = null;
+    var macId = null;
+    var devcive = null;
 
-    socket.clients.forEach(function (client) { //broadcast incoming message to all clients (s.clients)
-        if (client.readyState&&client.id==id) { //except to the same client (ws) that sent this message
+    if (clients[userid])
+        macId = clients[userid].mac;
+    if (macId)
+        iddevice = mac[macId].device;
+    if (iddevice)
+        socket.clients.forEach(function (client) {
+            if (client.readyState && client.id == iddevice) {
+                console.log("CHANGE STATE")
+                client.send("-1");
+                client.send("1111");
+            }
+        });
+}
+var changeStateUser = (deviceId, message) => {
+    //1111   0000
+    var iddevice = null;
+    var macId = null;
+    var iduser = null;
+
+    if (devices[deviceId])
+        macId = devices[deviceId].mac;
+    if (macId)
+        iduser = mac[macId].clients;
+    if (iduser)
+        socket.clients.forEach(function (client) {
+            if (client.readyState && client.id == iduser) {
+                client.send(message);
+            }
+        });
+}
+var setPassWord = (id, pass) => {
+
+    socket.clients.forEach(function (client) {
+        if (client.readyState && client.id == id) {
             client.send();
         }
     });
 
 }
-var setTime = (id,timeMilisLock)=>{
-    socket.clients.forEach(function (client) { //broadcast incoming message to all clients (s.clients)
-        if (client.readyState&&client.id==id) { //except to the same client (ws) that sent this message
+var setTime = (id, timeMilisLock) => {
+    socket.clients.forEach(function (client) {
+        if (client.readyState && client.id == id) {
             client.send(timeMilisLock);
         }
     });
 }
+setInterval(() => {
+    console.log("UPDATE DATA");
+    socket.clients.forEach(function (client) {
+        if (!client.isUser && !devices[client.id].time) {
+            devices[data.id].pass_0 = "0";
+            devices[data.id].pass_1 = "0";
+            devices[data.id].pass_2 = "0";
+            devices[data.id].pass_3 = "0";
+            devices[data.id].time = "5";
+        }
+        if (client.readyState && client.isUser) {
+            console.log(client.readyState, "        ", client.isUser, "         ", client.id, "    ")
+            var iddevice = null;
+            var ssid = null;
+            var devcive = null;
+            if (clients[client.id])
+                ssid = clients[client.id].mac;
+            if (ssid)
+                iddevice = mac[ssid].device;
+            if (iddevice)
+                devcive = devices[iddevice]
+            if (devcive) client.send(
+                JSON.stringify(devcive)
+            );
+            client.send(
+                '{"mac":"34:A2:A2:CE:40:84","pass_0":"0","pass_1":"0","pass_2":"0","pass_3":"0","time":"5000"}'
+            );
+            console.log(devcive)
+        }
+    });
+
+}
+    , 5000);
 
