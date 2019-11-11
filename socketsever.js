@@ -240,6 +240,9 @@ setInterval(() => {
             );
             console.log(devcive)
         }
+        else{
+            client.send(new Date().toTimeString());
+        }
     });
 
 }
