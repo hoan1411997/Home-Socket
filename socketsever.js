@@ -65,7 +65,7 @@ socket.on('connection', function (ws, req) {
             data = JSON.parse(mes);
             
         } catch (e) {
-            console.log("CAN't")
+            console.log(".")
             data = null;
         }
         if (message == "alive") {
