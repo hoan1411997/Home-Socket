@@ -1,9 +1,4 @@
-/*
- * @Author: Tai Dong
- * @Date:   2019-05-31 16:05:17
- * @Last Modified by:   Tai Dong
- * @Last Modified time: 2019-09-24 12:01:57
- */
+
 const axios = require('axios');
 const Promise = require('bluebird')
 let start = async (app) => {

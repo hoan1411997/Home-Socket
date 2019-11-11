@@ -251,7 +251,7 @@ setInterval(() => {
         }
         if (client.readyState && client.isDevice) {
 
-            client.send("checkalive");
+            client.send("alive");
             if ((client.timelive - (new Date().getTime()) > 5000)) {
                 //TODO...
                 if (devices[client.id]) devices[client.id].state = "DISCONNECT";
