@@ -1,3 +1,5 @@
+var sync =require("./consumer/sync-brand").start;
+sync();
 var bodyParser = require("body-parser");
 const express = require('express');
 const app = express();
