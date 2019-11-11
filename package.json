@@ -7,7 +7,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node websocket.js"
+    "start": "node socketsever.js"
   },
   "keywords": [],
   "author": "",
