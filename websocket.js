@@ -198,16 +198,18 @@ var setPassWord = (fromuserId, pass) => {
 var setTime = (fromuserId, timeMilisLock) => {
     var iddevice = null;
     var macId = null;
+    
     if (clients[fromuserId])
         macId = clients[fromuserId].mac;
     if (macId)
         iddevice = mac[macId].device;
-    if (iddevice)
+    if (iddevice){
+        devices[iddevice].time = timeMilisLock;
         socket.clients.forEach(function (client) {
             if (client.readyState && client.id == iddevice) {
                 client.send(timeMilisLock);
             }
-        });
+        });}
 }
 setInterval(() => {
     console.log("UPDATE DATA");
