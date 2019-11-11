@@ -76,7 +76,7 @@ socket.on('connection', function (ws, req) {
             setTime(ws.id, data.newtime);
         }
         if (data && data.newpass) {
-            setTime(ws.id, data.newpass);
+            setPassWord(ws.id, data.newpass);
         }
         if (data && data.sigin) {
             ws.id = data.sigin;
@@ -179,6 +179,7 @@ var setPassWord = (fromuserId, pass) => {
             if (iddevice)
                 socket.clients.forEach(function (client) {
                     if (client.readyState && client.id == iddevice) {
+                        console.log("UPDATE PASS")
                         client.send("1"+pw[0]);
                         client.send("2"+pw[1]);
                         client.send("3"+pw[2]);
@@ -204,7 +205,7 @@ var setTime = (fromuserId, timeMilisLock) => {
     if (iddevice)
         socket.clients.forEach(function (client) {
             if (client.readyState && client.id == iddevice) {
-                client.send("timeMilisLock");
+                client.send(timeMilisLock);
             }
         });
 }
