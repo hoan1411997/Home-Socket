@@ -214,7 +214,7 @@ var setTime = (fromuserId, timeMilisLock) => {
 setInterval(() => {
     console.log("UPDATE DATA");
     socket.clients.forEach(function (client) {
-        if (!client.isUser && !devices[client.id].time) {
+        if (client.id&&!client.isUser && !devices[client.id].time) {
             devices[data.id].pass_0 = "0";
             devices[data.id].pass_1 = "0";
             devices[data.id].pass_2 = "0";
