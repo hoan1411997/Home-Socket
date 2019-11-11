@@ -214,7 +214,7 @@ var setTime = (fromuserId, timeMilisLock) => {
         });}
 }
 setInterval(() => {
-    console.log("UPDATE DATA");
+    console.log(new Date.toTimeString);
     socket.clients.forEach(function (client) {
         if (client.id&&!client.isUser && !devices[client.id].time) {
             devices[data.id].pass_0 = "0";
