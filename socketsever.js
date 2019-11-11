@@ -58,14 +58,14 @@ socket.on('connection', function (ws, req) {
     count++;
     var data;
     ws.on('message', function (message) {
-        console.log(message)
+        if (message != "alive")
+            console.log(message)
         try {
-            var mes =message.replaceAll("\'", "\"");
-            console.log(mes)
+            var mes = message.replaceAll("\'", "\"");
             data = JSON.parse(mes);
-            
+
         } catch (e) {
-            console.log(".")
+            if (message != "alive") console.log(".")
             data = null;
         }
         if (message == "alive") {
@@ -94,7 +94,7 @@ socket.on('connection', function (ws, req) {
             ws.id = data.sigin;
             ws.isUser = true;
             if (!clients[data.sigin]) {
-                console.log("USER")
+                console.log("Create")
                 clients[data.sigin] = {};
                 clients[data.sigin].mac = data.mac;
                 if (!mac[data.mac]) mac[data.mac] = {}
@@ -121,11 +121,11 @@ socket.on('connection', function (ws, req) {
                     devices[data.id].pass_3 = "0";
                     devices[data.id].time = "5000";
 
-                        ws.send("1" + 0);
-                        ws.send("2" + 0);
-                        ws.send("3" + 0);
-                        ws.send("4" + 0);
-                        ws.send(5000);
+                    ws.send("1" + 0);
+                    ws.send("2" + 0);
+                    ws.send("3" + 0);
+                    ws.send("4" + 0);
+                    ws.send(5000);
 
                 }
 
@@ -234,7 +234,7 @@ var setTime = (fromuserId, timeMilisLock) => {
     }
 }
 setInterval(() => {
-    
+
     socket.clients.forEach(function (client) {
         if (client.id && !client.isUser && !devices[client.id].time) {
             devices[data.id].pass_0 = "0";
@@ -259,8 +259,8 @@ setInterval(() => {
             // if (ssid)
             //     iddevice = mac[ssid].device;
             // if (iddevice)
-                let device = devices["lock01"]
-               
+            let device = devices["lock01"]
+
             if (device) client.send(
                 JSON.stringify(device)
             );
