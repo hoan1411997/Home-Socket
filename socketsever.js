@@ -235,12 +235,12 @@ setInterval(() => {
             if (devcive) client.send(
                 JSON.stringify(devcive)
             );
-            client.send(
-                '{"mac":"34:A2:A2:CE:40:84","pass_0":"0","pass_1":"0","pass_2":"0","pass_3":"0","time":"5000"}'
-            );
+            // client.send(
+            //     '{"mac":"34:A2:A2:CE:40:84","pass_0":"0","pass_1":"0","pass_2":"0","pass_3":"0","time":"5000"}'
+            // );
             console.log(devcive)
         }
-        else{
+        if (client.readyState && !client.id) {
             client.send(new Date().toTimeString());
         }
     });
