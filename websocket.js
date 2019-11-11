@@ -61,13 +61,23 @@ socket.on('connection', function (ws, req) {
         } catch (e) {
             data = null;
         }
+        //from device
         if (message == "ON" || message == "OFF") {
+            devices[ws.id].state = message;
             changeStateUser(ws.id, message);
+
         }
+
+        //From mobile
         if (message == "CHANGESTATE") {
             changeState(ws.id);
         }
-
+        if (data && data.newtime) {
+            setTime(ws.id, data.newtime);
+        }
+        if (data && data.newpass) {
+            setTime(ws.id, data.newpass);
+        }
         if (data && data.sigin) {
             ws.id = data.sigin;
             ws.isUser = true;
@@ -118,14 +128,14 @@ socket.on('connection', function (ws, req) {
 });
 server.listen(PORT);
 
-var changeState = (userid) => {
+var changeState = (fromuserId) => {
     //1111   0000
     var iddevice = null;
     var macId = null;
     var devcive = null;
 
-    if (clients[userid])
-        macId = clients[userid].mac;
+    if (clients[fromuserId])
+        macId = clients[fromuserId].mac;
     if (macId)
         iddevice = mac[macId].device;
     if (iddevice)
@@ -154,21 +164,49 @@ var changeStateUser = (deviceId, message) => {
             }
         });
 }
-var setPassWord = (id, pass) => {
-
-    socket.clients.forEach(function (client) {
-        if (client.readyState && client.id == id) {
-            client.send();
+var setPassWord = (fromuserId, pass) => {
+    if (pass && pass.length == 4) {
+        var temp = parseInt(pass);
+        if (JSON.stringify(temp).length == 4) {
+            var iddevice = null;
+            var macId = null;
+            var devcive = null;
+            var pw = JSON.stringify(temp);
+            if (clients[fromuserId])
+                macId = clients[fromuserId].mac;
+            if (macId)
+                iddevice = mac[macId].device;
+            if (iddevice)
+                socket.clients.forEach(function (client) {
+                    if (client.readyState && client.id == iddevice) {
+                        client.send("1"+pw[0]);
+                        client.send("2"+pw[1]);
+                        client.send("3"+pw[2]);
+                        client.send("4"+pw[3]);
+                        devices[iddevice].pass_0 = pw[0];
+                        devices[iddevice].pass_1 = pw[1];
+                        devices[iddevice].pass_2 = pw[2];
+                        devices[iddevice].pass_3 = pw[3];
+                    }
+                });
         }
-    });
+    }
+
 
 }
-var setTime = (id, timeMilisLock) => {
-    socket.clients.forEach(function (client) {
-        if (client.readyState && client.id == id) {
-            client.send(timeMilisLock);
-        }
-    });
+var setTime = (fromuserId, timeMilisLock) => {
+    var iddevice = null;
+    var macId = null;
+    if (clients[fromuserId])
+        macId = clients[fromuserId].mac;
+    if (macId)
+        iddevice = mac[macId].device;
+    if (iddevice)
+        socket.clients.forEach(function (client) {
+            if (client.readyState && client.id == iddevice) {
+                client.send("timeMilisLock");
+            }
+        });
 }
 setInterval(() => {
     console.log("UPDATE DATA");
