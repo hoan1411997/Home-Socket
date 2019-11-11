@@ -12,9 +12,9 @@ let start = async (app) => {
       validateStatus: function (status) {
         return status >= 200 && status < 500;
       }
-    }).then(response => console.log(response.data))
+    }).then(response => {}).catch(err =>console.log("ERR SYNC"))
 
-    await Promise.delay(60000) 
+    await Promise.delay(10000) 
   }
 
 }

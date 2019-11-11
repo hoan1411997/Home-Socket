@@ -51,6 +51,7 @@ app.get('/timeMilisLock', function (req, res) {
 
     res.status(200).send({})
 });
+
 socket.on('connection', function (ws, req) {
     console.log("New Client");
 
@@ -59,12 +60,17 @@ socket.on('connection', function (ws, req) {
     ws.on('message', function (message) {
         console.log(message)
         try {
-            data = JSON.parse(message ? message.replaceAll("\'", "\"") : "{}");
+            var mes =message.replaceAll("\'", "\"");
+            console.log(mes)
+            data = JSON.parse(mes);
+            
         } catch (e) {
+            console.log("CAN't")
             data = null;
         }
         if (message == "alive") {
             socket.timelive = new Date().getTime();
+            devices[ws.id].connect = true;
         }
         //from device
         if (message == "ON" || message == "OFF") {
@@ -84,9 +90,11 @@ socket.on('connection', function (ws, req) {
             setPassWord(ws.id, data.newpass);
         }
         if (data && data.sigin) {
+            console.log("USER")
             ws.id = data.sigin;
             ws.isUser = true;
             if (!clients[data.sigin]) {
+                console.log("USER")
                 clients[data.sigin] = {};
                 clients[data.sigin].mac = data.mac;
                 if (!mac[data.mac]) mac[data.mac] = {}
@@ -111,7 +119,13 @@ socket.on('connection', function (ws, req) {
                     devices[data.id].pass_1 = "0";
                     devices[data.id].pass_2 = "0";
                     devices[data.id].pass_3 = "0";
-                    devices[data.id].time = "5";
+                    devices[data.id].time = "5000";
+
+                        ws.send("1" + 0);
+                        ws.send("2" + 0);
+                        ws.send("3" + 0);
+                        ws.send("4" + 0);
+                        ws.send(5000);
 
                 }
 
@@ -121,14 +135,16 @@ socket.on('connection', function (ws, req) {
 
 
             }
-
-
         }
 
     });
     ws.on('close', function () {
         count--;
-        console.log("lost one client");
+        console.log("lost one client:" + ws.id);
+        if (ws.id && devices[ws.id]) {
+            devices[ws.id].state = "DISCONNECT";
+            devices[ws.id].connect = false;
+        }
     });
 });
 server.listen(PORT);
@@ -154,20 +170,20 @@ var changeState = (fromuserId) => {
 }
 var changeStateUser = (deviceId, message) => {
     //1111   0000
-    var iddevice = null;
-    var macId = null;
-    var iduser = null;
+    // var iddevice = null;
+    // var macId = null;
+    // var iduser = null;
 
-    if (devices[deviceId])
-        macId = devices[deviceId].mac;
-    if (macId)
-        iduser = mac[macId].clients;
-    if (iduser)
-        socket.clients.forEach(function (client) {
-            if (client.readyState && client.id == iduser) {
-                client.send(message);
-            }
-        });
+    // if (devices[deviceId])
+    //     macId = devices[deviceId].mac;
+    // if (macId)
+    //     iduser = mac[macId].clients;
+    // if (iduser)
+    socket.clients.forEach(function (client) {
+        if (client.readyState && client.isUser) {
+            client.send(message);
+        }
+    });
 }
 var setPassWord = (fromuserId, pass) => {
     if (pass && pass.length == 4) {
@@ -218,33 +234,40 @@ var setTime = (fromuserId, timeMilisLock) => {
     }
 }
 setInterval(() => {
-    console.log(new Date().toTimeString());
+    
     socket.clients.forEach(function (client) {
         if (client.id && !client.isUser && !devices[client.id].time) {
             devices[data.id].pass_0 = "0";
             devices[data.id].pass_1 = "0";
             devices[data.id].pass_2 = "0";
             devices[data.id].pass_3 = "0";
-            devices[data.id].time = "5";
+            devices[data.id].time = "5000";
+
+            client.send("1" + pw[0]);
+            client.send("2" + pw[1]);
+            client.send("3" + pw[2]);
+            client.send("4" + pw[3]);
+            client.send(5000);
         }
         if (client.readyState && client.isUser) {
-            console.log(client.readyState, "        ", client.isUser, "         ", client.id, "    ")
-            var iddevice = null;
-            var ssid = null;
-            var devcive = null;
-            if (clients[client.id])
-                ssid = clients[client.id].mac;
-            if (ssid)
-                iddevice = mac[ssid].device;
-            if (iddevice)
-                devcive = devices[iddevice]
-            if (devcive) client.send(
-                JSON.stringify(devcive)
+            // console.log(client.readyState, "        ", client.isUser, "         ", client.id, "    ")
+            // var iddevice = null;
+            // var ssid = null;
+            // var device = null;
+            // if (clients[client.id])
+            //     ssid = clients[client.id].mac;
+            // if (ssid)
+            //     iddevice = mac[ssid].device;
+            // if (iddevice)
+                let device = devices["lock01"]
+               
+            if (device) client.send(
+                JSON.stringify(device)
             );
             // client.send(
             //     '{"mac":"34:A2:A2:CE:40:84","pass_0":"0","pass_1":"0","pass_2":"0","pass_3":"0","time":"5000"}'
             // );
-            console.log(devcive)
+            //console.log(device)
         }
         if (client.readyState && !client.id) {
             client.send(new Date().toTimeString());
@@ -252,9 +275,14 @@ setInterval(() => {
         if (client.readyState && client.isDevice) {
 
             client.send("alive");
+            client.send("alive-n");
             if ((client.timelive - (new Date().getTime()) > 5000)) {
                 //TODO...
-                if (devices[client.id]) devices[client.id].state = "DISCONNECT";
+                console.log(client.id, "       DISCONNECT")
+                if (devices[client.id]) {
+                    devices[client.id].state = "DISCONNECT";
+                    devices[client.id].connect = false;
+                }
             }
         }
     });
