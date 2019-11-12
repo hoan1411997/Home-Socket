@@ -4,10 +4,10 @@ const Op = sequeliz.Op;
 
 function creat() {
 	return new sequeliz({
-		database: "d2eqdg4hnddgiq",
-		username: "pkprxpexfbzbkw",
-		password: "0104034f04c154d9b75bbecaff6998ef953d3438e1c12af2d790a0f7bf907766",
-		host: "ec2-46-137-113-157.eu-west-1.compute.amazonaws.com",
+		database: "daqdm10l260m0e",
+		username: "odbvcunjiubdch",
+		password: "12b23ec78bfecf3262ad56ac740fb96908fb0b10d14b9fceff241318a0125a32",
+		host: "ec2-46-137-187-23.eu-west-1.compute.amazonaws.com",
 		port: 5432,
 		dialect: "postgres",
 		dialectOptions: {
@@ -16,8 +16,8 @@ function creat() {
 		define: {
 			freezeTableName: true
 		},
-		uri: "postgres://pkprxpexfbzbkw:0104034f04c154d9b75bbecaff6998ef953d3438e1c12af2d790a0f7bf907766@ec2-46-137-113-157.eu-west-1.compute.amazonaws.com:5432/d2eqdg4hnddgiqHeroku CLI\n" +
-		"heroku pg:psql postgresql-symmetrical-00864 --app postgres-db-v"
+		uri: "postgres://odbvcunjiubdch:12b23ec78bfecf3262ad56ac740fb96908fb0b10d14b9fceff241318a0125a32@ec2-46-137-187-23.eu-west-1.compute.amazonaws.com:5432/daqdm10l260m0eHeroku CLI\n" +
+		"heroku pg:psql postgresql-clean-03942 --app dbhomes"
 	});
 }
 const db = creat();
@@ -29,10 +29,9 @@ const usertable = require('./models/User')(db, sequeliz);
 db.sync();
 ////-----------------------coment----------------------------------------------------------------------------------------------------------------
 function Sequelize() {
-	const KEY = "dsadas";
+	const KEY = "HOMESOCKET";
 
 	function createUser(id, next, errs) {
-
 		usertable.create({
 			idfb: id
 		}).then(user => {
