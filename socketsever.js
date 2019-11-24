@@ -187,8 +187,6 @@ var changeStateUser = (deviceId, message) => {
 }
 var setPassWord = (fromuserId, pass) => {
     if (pass && pass.length == 4) {
-
-
         var iddevice = null;
         var macId = null;
         if (clients[fromuserId])
@@ -199,10 +197,10 @@ var setPassWord = (fromuserId, pass) => {
             socket.clients.forEach(function (client) {
                 if (client.readyState && client.id == iddevice) {
                     console.log("UPDATE PASS")
-                    client.send("1" + pw[0]);
-                    client.send("2" + pw[1]);
-                    client.send("3" + pw[2]);
-                    client.send("4" + pw[3]);
+                    client.send("1" + pass[0]);
+                    client.send("2" + pass[1]);
+                    client.send("3" + pass[2]);
+                    client.send("4" + pass[3]);
                     devices[iddevice].pass_0 = pw[0];
                     devices[iddevice].pass_1 = pw[1];
                     devices[iddevice].pass_2 = pw[2];
