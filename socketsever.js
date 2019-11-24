@@ -56,7 +56,7 @@ socket.on('connection', function (ws, req) {
     count++;
     var data;
     ws.on('message', function (message) {
-        if (message != "alive")
+       // if (message != "alive")
             console.log(message)
         try {
             var mes = message.replaceAll("\'", "\"");
