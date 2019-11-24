@@ -237,9 +237,9 @@ var setTime = (fromuserId, timeMilisLock) => {
 setInterval(() => {
 
     var keyDevices = Object.keys(devices);
-    if (keyDevices && keyDevices.length > 0 && devices[key].timelive)
+    if (keyDevices && keyDevices.length > 0 )
         keyDevices.forEach(function (n, key) {
-            if (((new Date().getTime()) - devices[key].timelive) > 1500) {
+            if (devices[key].timelive && ((new Date().getTime()) - devices[key].timelive) > 1500) {
                 devices[key].connect = false;
                 devices[key].state = "DISCONNECT";
             }
