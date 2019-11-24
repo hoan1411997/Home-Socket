@@ -237,7 +237,7 @@ var setTime = (fromuserId, timeMilisLock) => {
 setInterval(() => {
 
     var keyDevices = Object.keys(devices);
-    if (keyDevices && keyDevices.length > 0)
+    if (keyDevices && keyDevices.length > 0 && devices[key].timelive)
         keyDevices.forEach(function (n, key) {
             if (((new Date().getTime()) - devices[key].timelive) > 1500) {
                 devices[key].connect = false;
