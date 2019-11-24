@@ -128,7 +128,7 @@ socket.on('connection', function (ws, req) {
                     ws.send(3000);
 
                 }
-
+                devices[ws.id].connect = true;
 
                 if (!mac[data.mac]) mac[data.mac] = {}
                 mac[data.mac].device = data.id;
