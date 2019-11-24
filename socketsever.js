@@ -239,7 +239,7 @@ setInterval(() => {
     var keyDevices = Object.keys(devices);
     if (keyDevices && keyDevices.length > 0) {
         keyDevices.forEach((key) => {
-            if (devices[key] && devices[key].timelive) {
+            if (devices[key] && devices[key].timelive && devices[key].connect) {
                 if (((new Date().getTime()) - devices[key].timelive) > 1500) {
                     console.log("DISCONNECT "+ key)
                     devices[key].connect = false;
