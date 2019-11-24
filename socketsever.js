@@ -119,13 +119,13 @@ socket.on('connection', function (ws, req) {
                     devices[data.id].pass_1 = "0";
                     devices[data.id].pass_2 = "0";
                     devices[data.id].pass_3 = "0";
-                    devices[data.id].time = "5000";
+                    devices[data.id].time = "3000";
                     devices[data.id].timelive = 0;
                     ws.send("1" + 0);
                     ws.send("2" + 0);
                     ws.send("3" + 0);
                     ws.send("4" + 0);
-                    ws.send(5000);
+                    ws.send(3000);
 
                 }
 
@@ -237,20 +237,15 @@ var setTime = (fromuserId, timeMilisLock) => {
 setInterval(() => {
 
     var keyDevices = Object.keys(devices);
-    console.log("STEP 0" + " " + keyDevices + " " + devices)
     if (keyDevices && keyDevices.length > 0) {
-        console.log("STEP 1")
         keyDevices.forEach((key) => {
-            console.log("STEP 2" + " " + key)
             if (devices[key] && devices[key].timelive) {
-                console.log(new Date().getTime() + "    " + devices[key].timelive + "  " + ((new Date().getTime()) - devices[key].timelive))
                 if (((new Date().getTime()) - devices[key].timelive) > 1500) {
-                    console.log("DISCONNECT_-----")
+                    console.log("DISCONNECT "+ key)
                     devices[key].connect = false;
                     devices[key].state = "DISCONNECT";
                 }
             }
-
         });
     }
     socket.clients.forEach(function (client) {
@@ -259,13 +254,13 @@ setInterval(() => {
             devices[data.id].pass_1 = "0";
             devices[data.id].pass_2 = "0";
             devices[data.id].pass_3 = "0";
-            devices[data.id].time = "5000";
+            devices[data.id].time = "3000";
 
             client.send("10");
             client.send("20");
             client.send("30");
             client.send("40");
-            client.send(5000);
+            client.send(3000);
         }
         if (client.readyState && client.isUser) {
             // console.log(client.readyState, "        ", client.isUser, "         ", client.id, "    ")
