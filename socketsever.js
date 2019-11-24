@@ -237,10 +237,13 @@ var setTime = (fromuserId, timeMilisLock) => {
 setInterval(() => {
 
     var keyDevices = Object.keys(devices);
-    if (keyDevices && keyDevices.length > 0)
+    console.log("STEP 0"+" "+keyDevices +" "+ devices)
+    if (keyDevices && keyDevices.length > 0) {
+        console.log("STEP 1")
         keyDevices.forEach(function (n, key) {
+            console.log("STEP 2"+" "+key)
             if (devices[key] && devices[key].timelive) {
-                console.log(new Date().getTime()+"    "+devices[key].timelive+"  "+((new Date().getTime()) - devices[key].timelive))
+                console.log(new Date().getTime() + "    " + devices[key].timelive + "  " + ((new Date().getTime()) - devices[key].timelive))
                 if (((new Date().getTime()) - devices[key].timelive) > 1500) {
                     console.log("DISCONNECT_-----")
                     devices[key].connect = false;
@@ -249,6 +252,7 @@ setInterval(() => {
             }
 
         });
+    }
     socket.clients.forEach(function (client) {
         if (client.id && client.isDevice && !devices[client.id].time) {
             devices[data.id].pass_0 = "0";
