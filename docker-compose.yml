@@ -6,7 +6,7 @@ services:
       - "8888:8888"
     environment:
       - CMD=socket
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV=dev
     restart: always
     logging:
       driver: "json-file"
