@@ -120,7 +120,7 @@ socket.on('connection', function (ws, req) {
                     devices[data.id].pass_2 = "0";
                     devices[data.id].pass_3 = "0";
                     devices[data.id].time = "5000";
-
+                    devices[data.id].timelive=0;
                     ws.send("1" + 0);
                     ws.send("2" + 0);
                     ws.send("3" + 0);
@@ -239,7 +239,7 @@ setInterval(() => {
     var keyDevices = Object.keys(devices);
     if (keyDevices && keyDevices.length > 0 )
         keyDevices.forEach(function (n, key) {
-            if (devices[key].timelive && ((new Date().getTime()) - devices[key].timelive) > 1500) {
+            if (devices[key] && devices[key].timelive && ((new Date().getTime()) - devices[key].timelive) > 1500) {
                 devices[key].connect = false;
                 devices[key].state = "DISCONNECT";
             }
