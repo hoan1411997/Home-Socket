@@ -67,7 +67,7 @@ socket.on('connection', function (ws, req) {
             data = null;
         }
         if (message == "alive") {
-            socket.timelive = new Date().getTime();
+            console.log(ws.id+" alive "+new Date().getTime())
             devices[ws.id].connect = true;
             devices[ws.id].timelive = new Date().getTime();
         }
@@ -234,15 +234,16 @@ var setTime = (fromuserId, timeMilisLock) => {
     }
 }
 setInterval(() => {
+   
+    var keyDevices = Object.keys(devices);
+    if (keyDevices && keyDevices.length > 0)
+        keyDevices.forEach(function (n, key) {
+            if (((new Date().getTime()) - devices[key].timelive) > 1500) {
+                devices[key].connect = false;
+                devices[key].state = "DISCONNECT";
+            }
 
-    Object.keys(devices).forEach(function(n,key){
-        if (((new Date().getTime()) - devices[key].timelive)>1500) {
-            devices[key].connect=false;
-            devices[key].state="DISCONNECT";
-
-        }
-        
-      });
+        });
     socket.clients.forEach(function (client) {
         if (client.id && client.isDevice && !devices[client.id].time) {
             devices[data.id].pass_0 = "0";
