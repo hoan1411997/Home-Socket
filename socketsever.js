@@ -115,16 +115,16 @@ socket.on('connection', function (ws, req) {
                 if (!devices[data.id]) {
                     devices[data.id] = {};
                     devices[data.id].mac = data.mac;
-                    devices[data.id].pass_0 = "0";
-                    devices[data.id].pass_1 = "0";
-                    devices[data.id].pass_2 = "0";
-                    devices[data.id].pass_3 = "0";
+                    devices[data.id].pass_0 = "1";
+                    devices[data.id].pass_1 = "1";
+                    devices[data.id].pass_2 = "1";
+                    devices[data.id].pass_3 = "1";
                     devices[data.id].time = "3000";
                     devices[data.id].timelive = 0;
-                    ws.send("1" + 0);
-                    ws.send("2" + 0);
-                    ws.send("3" + 0);
-                    ws.send("4" + 0);
+                    ws.send("1" + 1);
+                    ws.send("2" + 1);
+                    ws.send("3" + 1);
+                    ws.send("4" + 1);
                     ws.send(3000);
 
                 }
@@ -250,16 +250,16 @@ setInterval(() => {
     }
     socket.clients.forEach(function (client) {
         if (client.id && client.isDevice && !devices[client.id].time) {
-            devices[data.id].pass_0 = "0";
-            devices[data.id].pass_1 = "0";
-            devices[data.id].pass_2 = "0";
-            devices[data.id].pass_3 = "0";
+            devices[data.id].pass_0 = "1";
+            devices[data.id].pass_1 = "1";
+            devices[data.id].pass_2 = "1";
+            devices[data.id].pass_3 = "1";
             devices[data.id].time = "3000";
 
-            client.send("10");
-            client.send("20");
-            client.send("30");
-            client.send("40");
+            client.send("11");
+            client.send("21");
+            client.send("31");
+            client.send("41");
             client.send(3000);
         }
         if (client.readyState && client.isUser) {
