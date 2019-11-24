@@ -191,8 +191,6 @@ var setPassWord = (fromuserId, pass) => {
 
         var iddevice = null;
         var macId = null;
-
-        var pw = JSON.stringify(pass);
         if (clients[fromuserId])
             macId = clients[fromuserId].mac;
         if (macId)
