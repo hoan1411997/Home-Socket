@@ -237,11 +237,11 @@ var setTime = (fromuserId, timeMilisLock) => {
 setInterval(() => {
 
     var keyDevices = Object.keys(devices);
-    console.log("STEP 0"+" "+keyDevices +" "+ devices)
+    console.log("STEP 0" + " " + keyDevices + " " + devices)
     if (keyDevices && keyDevices.length > 0) {
         console.log("STEP 1")
-        keyDevices.forEach(function (n, key) {
-            console.log("STEP 2"+" "+key)
+        keyDevices.forEach((key) => {
+            console.log("STEP 2" + " " + key)
             if (devices[key] && devices[key].timelive) {
                 console.log(new Date().getTime() + "    " + devices[key].timelive + "  " + ((new Date().getTime()) - devices[key].timelive))
                 if (((new Date().getTime()) - devices[key].timelive) > 1500) {
