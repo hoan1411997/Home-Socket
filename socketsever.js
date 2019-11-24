@@ -56,18 +56,19 @@ socket.on('connection', function (ws, req) {
     count++;
     var data;
     ws.on('message', function (message) {
-       // if (message != "alive")
+        if (message != "alive-s") {
             console.log(message)
-        try {
-            var mes = message.replaceAll("\'", "\"");
-            data = JSON.parse(mes);
+            try {
+                var mes = message.replaceAll("\'", "\"");
+                data = JSON.parse(mes);
 
-        } catch (e) {
-            if (message != "alive") console.log(".")
-            data = null;
+            } catch (e) {
+                if (message != "alive-s") console.log(".")
+                data = null;
+            }
         }
-        if (message == "alive") {
-            console.log(ws.id+" alive "+new Date().getTime())
+        if (message == "alive-s") {
+            console.log(ws.id + " alive " + new Date().getTime())
             devices[ws.id].connect = true;
             devices[ws.id].timelive = new Date().getTime();
         }
@@ -234,7 +235,7 @@ var setTime = (fromuserId, timeMilisLock) => {
     }
 }
 setInterval(() => {
-   
+
     var keyDevices = Object.keys(devices);
     if (keyDevices && keyDevices.length > 0)
         keyDevices.forEach(function (n, key) {
