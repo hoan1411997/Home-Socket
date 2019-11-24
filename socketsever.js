@@ -69,6 +69,7 @@ socket.on('connection', function (ws, req) {
         if (message == "alive") {
             socket.timelive = new Date().getTime();
             devices[ws.id].connect = true;
+            devices[ws.id].timelive = new Date().getTime();
         }
         //from device
         if (message == "ON" || message == "OFF") {
@@ -234,18 +235,26 @@ var setTime = (fromuserId, timeMilisLock) => {
 }
 setInterval(() => {
 
+    Object.keys(devices).forEach(function(n,key){
+        if (((new Date().getTime()) - devices[key].timelive)>1500) {
+            devices[key].connect=false;
+            devices[key].state="DISCONNECT";
+
+        }
+        
+      });
     socket.clients.forEach(function (client) {
-        if (client.id && !client.isUser && !devices[client.id].time) {
+        if (client.id && client.isDevice && !devices[client.id].time) {
             devices[data.id].pass_0 = "0";
             devices[data.id].pass_1 = "0";
             devices[data.id].pass_2 = "0";
             devices[data.id].pass_3 = "0";
             devices[data.id].time = "5000";
 
-            client.send("1" + pw[0]);
-            client.send("2" + pw[1]);
-            client.send("3" + pw[2]);
-            client.send("4" + pw[3]);
+            client.send("10");
+            client.send("20");
+            client.send("30");
+            client.send("40");
             client.send(5000);
         }
         if (client.readyState && client.isUser) {
@@ -272,20 +281,11 @@ setInterval(() => {
             client.send(new Date().toTimeString());
         }
         if (client.readyState && client.isDevice) {
-
             client.send("alive");
             client.send("alive-n");
-            if ((client.timelive - (new Date().getTime()) > 5000)) {
-                //TODO...
-                console.log(client.id, "       DISCONNECT")
-                if (devices[client.id]) {
-                    devices[client.id].state = "DISCONNECT";
-                    devices[client.id].connect = false;
-                }
-            }
         }
     });
 
 }
-    , 1500);
+    , 600);
 
